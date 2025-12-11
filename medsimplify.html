@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSimplify - Research Made Readable</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #1B3A4B;
+            --rust: #C65D3B;
+            --cream: #F4EDE3;
+            --sage: #7A9B7F;
+            --charcoal: #2D3E50;
+            --sand: #E8DCC4;
+            --slate: #556B7C;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            background: var(--navy);
+            color: var(--cream);
+            padding: 4rem 2rem 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(122, 155, 127, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .brand-mark {
+            width: 8px;
+            height: 8px;
+            background: var(--rust);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .brand-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--sage);
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+            max-width: 800px;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: var(--sand);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid rgba(85, 107, 124, 0.15);
+            position: relative;
+        }
+
+        .panel-input {
+            padding: 2.5rem;
+        }
+
+        .panel-output {
+            padding: 2.5rem;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .panel-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-label::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: var(--rust);
+        }
+
+        .examples {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .example-tag {
+            padding: 0.4rem 0.9rem;
+            background: transparent;
+            border: 1px solid var(--slate);
+            color: var(--slate);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--rust);
+            transition: left 0.3s ease;
+            z-index: 0;
+        }
+
+        .example-tag:hover::before {
+            left: 0;
+        }
+
+        .example-tag:hover {
+            color: white;
+            border-color: var(--rust);
+        }
+
+        .example-tag span {
+            position: relative;
+            z-index: 1;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 380px;
+            padding: 1.5rem;
+            border: 1px solid rgba(85, 107, 124, 0.2);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.75;
+            resize: vertical;
+            background: var(--cream);
+            color: var(--charcoal);
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--sage);
+            background: white;
+        }
+
+        textarea::placeholder {
+            color: var(--slate);
+            opacity: 0.5;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--rust);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-primary:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--slate);
+            border: 1px solid var(--slate);
+            padding: 0.9rem 1.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--charcoal);
+            color: white;
+            border-color: var(--charcoal);
+        }
+
+        .output-area {
+            background: linear-gradient(135deg, #f9f7f4 0%, #ffffff 100%);
+            padding: 2rem;
+            min-height: 380px;
+            font-size: 1rem;
+            line-height: 1.85;
+            white-space: pre-wrap;
+            border-left: 3px solid var(--sage);
+            position: relative;
+        }
+
+        .output-area.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--slate);
+            font-style: italic;
+            opacity: 0.6;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(85, 107, 124, 0.15);
+        }
+
+        .metric-box {
+            text-align: center;
+        }
+
+        .metric-number {
+            display: block;
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--rust);
+            margin-bottom: 0.25rem;
+            line-height: 1;
+        }
+
+        .metric-desc {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--slate);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.7s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .decorative-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--rust) 50%, transparent 100%);
+            margin: 3rem 0;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 968px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-output {
+                position: relative;
+                top: 0;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero {
+                padding: 3rem 1.5rem 2rem;
+            }
+
+            .container {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--sage);
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <div class="brand">
+                <div class="brand-mark"></div>
+                <span class="brand-name">MedSimplify</span>
+            </div>
+            <h1>Research doesn't have to be cryptic.</h1>
+            <p class="subtitle">Convert dense medical literature into clear, accessible language that anyone can understand.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="workspace">
+            <div class="panel panel-input">
+                <div class="panel-label">Source Material</div>
+                
+                <div class="examples">
+                    <button class="example-tag" onclick="loadExample('diabetes')">
+                        <span>Load Diabetes Study</span>
+                    </button>
+                    <button class="example-tag" onclick="loadExample('cancer')">
+                        <span>Load Immunotherapy Research</span>
+                    </button>
+                </div>
+
+                <textarea id="inputText" placeholder="Paste your medical abstract, clinical study, or research excerpt here..."></textarea>
+
+                <div class="actions">
+                    <button class="btn btn-primary" id="simplifyBtn" onclick="simplifyText()">
+                        <span>Transform Text</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearAll()">
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel panel-output">
+                <div class="panel-label">
+                    <span class="status-indicator"></span>
+                    Simplified Output
+                </div>
+
+                <div class="output-area empty" id="output">
+                    Your simplified text will appear here...
+                </div>
+
+                <div class="metrics-grid hidden" id="metrics">
+                    <div class="metric-box">
+                        <span class="metric-number" id="originalLevel">0</span>
+                        <span class="metric-desc">Original</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-number" id="simplifiedLevel">0</span>
+                        <span class="metric-desc">Simplified</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-number" id="reduction">0%</span>
+                        <span class="metric-desc">Easier</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="decorative-line"></div>
+    </div>
+
+    <script>
+        const examples = {
+            diabetes: "Background: Type 2 diabetes mellitus (T2DM) is characterized by insulin resistance and progressive β-cell dysfunction. Metformin remains the first-line pharmacological intervention, primarily functioning through AMPK-mediated suppression of hepatic gluconeogenesis. Methods: This randomized, double-blind, placebo-controlled trial enrolled 482 adults with newly diagnosed T2DM. Participants received either metformin (2000mg/day) or placebo for 24 weeks. Primary endpoints included changes in HbA1c, fasting plasma glucose, and insulin sensitivity indices. Results: Metformin demonstrated significant reductions in HbA1c (-1.2%, p<0.001) and fasting glucose (-38 mg/dL, p<0.001) compared to placebo. Conclusion: These findings corroborate metformin's efficacy in glycemic control through enhanced hepatic insulin sensitivity.",
+            
+            cancer: "Objective: To evaluate the efficacy of pembrolizumab, a programmed death receptor-1 (PD-1) inhibitor, in patients with advanced non-small cell lung cancer (NSCLC) expressing PD-L1. Methods: Multicenter phase III trial with 1034 participants randomized to pembrolizumab monotherapy or platinum-based chemotherapy. Primary outcome was progression-free survival (PFS). Results: Median PFS was 10.3 months in the pembrolizumab group versus 6.0 months in the chemotherapy group (HR 0.50, 95% CI 0.37-0.68). Adverse events were less frequent with immunotherapy. Conclusion: Pembrolizumab demonstrates superior efficacy and tolerability compared to conventional chemotherapy in PD-L1-positive NSCLC."
+        };
+
+        function loadExample(type) {
+            document.getElementById('inputText').value = examples[type];
+            clearOutput();
+        }
+
+        function calculateReadingLevel(text) {
+            if (!text) return 0;
+            const words = text.split(/\s+/).length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+            const syllables = text.split(/\s+/).reduce((count, word) => {
+                return count + Math.max(1, word.toLowerCase().split(/[aeiouy]+/).length - 1);
+            }, 0);
+            
+            const avgWordsPerSentence = words / Math.max(1, sentences);
+            const avgSyllablesPerWord = syllables / Math.max(1, words);
+            return Math.max(0, (0.39 * avgWordsPerSentence) + (11.8 * avgSyllablesPerWord) - 15.59);
+        }
+
+        async function simplifyText() {
+            const inputText = document.getElementById('inputText').value.trim();
+            if (!inputText) {
+                alert('Please enter some text to simplify!');
+                return;
+            }
+
+            const btn = document.getElementById('simplifyBtn');
+            const output = document.getElementById('output');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span><span>Processing...</span>';
+            
+            const originalLevel = calculateReadingLevel(inputText);
+
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 1000,
+                        messages: [{
+                            role: 'user',
+                            content: `You are a medical communication expert. Simplify the following medical/scientific text for a general audience (8th-grade reading level). Keep all key information but use plain language, shorter sentences, and everyday terms. Avoid jargon. If technical terms are necessary, explain them simply.
+
+Medical text:
+${inputText}
+
+Provide only the simplified version, no preamble or extra commentary.`
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                const simplified = data.content[0].text;
+                
+                output.textContent = simplified;
+                output.classList.remove('empty');
+                
+                const simplifiedLevel = calculateReadingLevel(simplified);
+                const reduction = Math.max(0, ((originalLevel - simplifiedLevel) / originalLevel * 100).toFixed(0));
+                
+                document.getElementById('originalLevel').textContent = originalLevel.toFixed(1);
+                document.getElementById('simplifiedLevel').textContent = simplifiedLevel.toFixed(1);
+                document.getElementById('reduction').textContent = reduction + '%';
+                document.getElementById('metrics').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                output.textContent = 'Unable to process your request. Please verify your connection and try again.';
+                output.classList.remove('empty');
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<span>Transform Text</span>';
+        }
+
+        function clearOutput() {
+            document.getElementById('output').textContent = 'Your simplified text will appear here...';
+            document.getElementById('output').classList.add('empty');
+            document.getElementById('metrics').classList.add('hidden');
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            clearOutput();
+        }
+    </script>
+</body>
+</html>
